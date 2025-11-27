@@ -26,10 +26,6 @@ app.get("/", (req, res) => {
   res.send("API Equilíbrio Digital funcionando!");
 });
 
-// importar rotas
-app.use("/api/contact", require("./routes/contact"));
-app.use("/api/events", require("./routes/events"));
-app.use("/api/forum", require("./routes/forum"));
 
 // Porta Render
 const PORT = process.env.PORT || 4000;
