@@ -1,4 +1,8 @@
 
+// ==============================
+// INICIALIZAÇÃO DO FRONT
+// ==============================
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Front carregado com sucesso!");
 
@@ -8,14 +12,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // ==============================
-// FUNÇÃO PARA BOTÕES CLICÁVEIS
+// ATIVAÇÃO DOS BOTÕES
 // ==============================
+
 function inicializarBotoes() {
     const botoes = document.querySelectorAll("[data-btn]");
     
     botoes.forEach(btn => {
         btn.addEventListener("click", () => {
             console.log("Botão clicado:", btn.dataset.btn);
+
+            // Exemplo de ação específica por botão
+            if (btn.dataset.btn === "whatsapp") {
+                window.open("https://wa.me/5585991234567", "_blank");
+            }
+
+            if (btn.dataset.btn === "agendar") {
+                document.querySelector("#formSection").scrollIntoView({ behavior: "smooth" });
+            }
         });
     });
 
@@ -24,16 +38,18 @@ function inicializarBotoes() {
 
 
 // ==============================
-// FORMULÁRIOS E ENVIOS
+// FORMULÁRIOS
 // ==============================
+
 function inicializarFormularios() {
     const forms = document.querySelectorAll("form");
 
     forms.forEach(form => {
         form.addEventListener("submit", async (e) => {
-            e.preventDefault(); // NÃO recarrega a página
+            e.preventDefault();
 
             const dados = Object.fromEntries(new FormData(form));
+
             console.log("Enviando dados:", dados);
 
             try {
@@ -43,25 +59,28 @@ function inicializarFormularios() {
                     alert("Dados enviados com sucesso!");
                     form.reset();
                 } else {
-                    alert("Erro no servidor.");
+                    const erro = await resposta.json().catch(() => ({}));
+                    console.error("Erro do servidor:", erro);
+                    alert("Erro ao enviar os dados.");
                 }
 
             } catch (err) {
-                console.error("Erro ao enviar:", err);
-                alert("Erro de conexão com o servidor.");
+                console.error("Erro de conexão:", err);
+                alert("Não foi possível conectar ao servidor.");
             }
         });
     });
 
-    console.log("Formulários preparados:", forms.length);
+    console.log("Formulários ativados:", forms.length);
 }
 
 
 // ==============================
-// FUNÇÃO PRINCIPAL DE INTEGRAÇÃO
+// INTEGRAÇÃO BACKEND
 // ==============================
+
 async function enviarParaBackend(dados) {
-    return fetch("https://SUA-URL-DO-BACKEND.com/api", {
+    return fetch("https://equil-brio-digital.onrender.com/api/contato", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
