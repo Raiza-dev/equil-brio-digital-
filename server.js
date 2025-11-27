@@ -56,3 +56,8 @@ async function createEvent(data) {
 window.onload = () => {
   fetchEvents();
 };
+
+const contactRoutes = require("./routes/contact");
+
+app.use("/contact", contactRoutes);
+
