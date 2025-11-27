@@ -26,6 +26,20 @@ app.get("/", (req, res) => {
   res.send("API Equilíbrio Digital funcionando!");
 });
 
+app.get("/api/public", async (req, res) => {
+  try {
+    const Item = mongoose.model(
+      "Item",
+      new mongoose.Schema({}, { strict: false }),
+      "NOME_DA_SUA_COLECAO"
+    );
+
+    const data = await Item.find();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Porta Render
 const PORT = process.env.PORT || 4000;
