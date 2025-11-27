@@ -31,7 +31,7 @@ app.get("/api/public", async (req, res) => {
     const Item = mongoose.model(
       "Item",
       new mongoose.Schema({}, { strict: false }),
-      "NOME_DA_SUA_COLECAO"
+      "raiza_user"
     );
 
     const data = await Item.find();
