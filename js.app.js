@@ -127,3 +127,9 @@ function fecharModal() {
   modal.classList.add("hidden");
   modal.style.display = "none";
 }
+
+// Exemplo em Node.js/Express:
+app.use(cors({
+  origin: ["https://raiza-dev.github.io"],
+  credentials: true
+}));
