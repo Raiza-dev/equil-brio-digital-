@@ -19,7 +19,6 @@ mongoose.connect(MONGO_URL, {
 // Rotas
 app.get("/", (req, res) => res.send("API Equilíbrio Digital funcionando!"));
 
-app.use("/auth", require("./routes/authRoutes"));
 app.use("/events", require("./routes/eventRoutes"));
 app.use("/forum", require("./routes/forumRoutes"));
 
