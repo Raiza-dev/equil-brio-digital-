@@ -1,166 +1,1655 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Equilíbrio Digital</title>
-
-  <!-- Tailwind CDN (dev) -->
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equilíbrio Digital - Plataforma de Conscientização</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
-    /* Pequenas customizações */
-    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-    .nav-shadow { box-shadow: 0 6px 18px rgba(15,23,42,0.06); }
-    .modal-backdrop { background: rgba(2,6,23,0.6); }
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .card-hover {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .nav-link {
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: #667eea;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      max-height: 500px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      transition: transform 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+    }
+
+    .section-padding {
+      padding: 80px 20px;
+    }
+
+    .hidden-section {
+      display: none;
+    }
+
+    .article-content h3 {
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .article-content p {
+      margin-bottom: 16px;
+      line-height: 1.8;
+    }
+
+    .article-content ul {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+
+    .article-content li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .section-padding {
+        padding: 50px 15px;
+      }
+    }
   </style>
-</head>
-<body class="bg-gray-50 text-gray-800">
-
-  <!-- NAV -->
-  <header class="w-full bg-white fixed top-0 left-0 z-40">
-    <div class="max-w-6xl mx-auto flex items-center justify-between p-4">
-      <a href="#inicio" class="text-xl font-semibold">Equilíbrio Digital</a>
-
-      <nav class="hidden md:flex gap-6 items-center">
-        <a class="nav-link" href="#inicio">Início</a>
-        <a class="nav-link" href="#eventos">Eventos</a>
-        <a class="nav-link" href="#sobre">Sobre</a>
-        <a class="nav-link" href="#contato">Contato</a>
-      </nav>
-
-      <div class="md:hidden">
-        <button id="btnMenu" aria-label="Abrir menu" class="p-2 rounded hover:bg-gray-100">☰</button>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body>
+  <div class="app-wrapper"><!-- Header -->
+   <header id="header" class="w-full shadow-md sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-6 py-4">
+     <div class="flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+       <svg class="w-10 h-10" viewbox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="23" stroke="#667eea" stroke-width="3" fill="none" /> <path d="M25 10 L25 25 L35 30" stroke="#667eea" stroke-width="3" stroke-linecap="round" />
+       </svg><span id="logo-text" class="text-2xl font-bold">Equilíbrio Digital</span>
       </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="md:hidden hidden bg-white border-t">
-      <div class="flex flex-col p-4 gap-2">
-        <a href="#inicio" class="block">Início</a>
-        <a href="#eventos" class="block">Eventos</a>
-        <a href="#sobre" class="block">Sobre</a>
-        <a href="#contato" class="block">Contato</a>
+      <div class="hidden md:flex items-center space-x-8"><a href="#inicio" class="nav-link">Início</a> <a href="#eventos" class="nav-link">Eventos</a> <a href="#comunidade" class="nav-link">Comunidade</a> <a href="#artigos" class="nav-link">Artigos</a> <a href="#contato" class="nav-link">Contato</a> <button id="institution-access-btn" class="btn-primary text-white px-6 py-2 rounded-full">🏢 Acesso Instituição</button>
+      </div><button id="mobile-menu-btn" class="md:hidden">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+       </svg></button>
+     </div>
+     <div id="mobile-menu" class="mobile-menu md:hidden">
+      <div class="flex flex-col space-y-4 pt-4 pb-4"><a href="#inicio" class="nav-link">Início</a> <a href="#eventos" class="nav-link">Eventos</a> <a href="#comunidade" class="nav-link">Comunidade</a> <a href="#artigos" class="nav-link">Artigos</a> <a href="#contato" class="nav-link">Contato</a> <button id="institution-access-btn-mobile" class="btn-primary text-white px-6 py-2 rounded-full w-full">🏢 Acesso Instituição</button>
       </div>
+     </div>
+    </nav>
+   </header><!-- Hero Section -->
+   <section id="inicio" class="gradient-bg section-padding">
+    <div class="max-w-7xl mx-auto text-center text-white">
+     <h1 id="hero-title" class="text-5xl md:text-6xl font-bold mb-6">Conectando Pessoas e Instituições para um Uso Consciente da Internet</h1>
+     <p id="hero-subtitle" class="text-xl md:text-2xl mb-10 opacity-90">Plataforma para eventos, comunidade e testes sobre dependência digital</p>
+     <div class="flex flex-col md:flex-row gap-4 justify-center"><button id="explore-events-btn" class="bg-white text-purple-700 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition">Explorar Eventos</button> <button id="take-test-btn" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-purple-700 transition">📝 Fazer Teste de Dependência</button>
+     </div>
     </div>
-  </header>
-
-  <!-- HERO -->
-  <main class="pt-20">
-    <section id="inicio" class="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-8 items-center">
+   </section><!-- Sobre o Projeto -->
+   <section id="sobre" class="section-padding">
+    <div class="max-w-7xl mx-auto">
+     <h2 id="about-title" class="text-4xl font-bold text-center mb-12">Sobre o Equilíbrio Digital</h2>
+     <div class="grid md:grid-cols-2 gap-12 items-center">
       <div>
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Bem-vinda ao Equilíbrio Digital</h1>
-        <p class="text-lg mb-6">Plataforma de conscientização e eventos com foco em saúde e bem-estar digital.</p>
-
-        <div class="flex gap-3">
-          <button data-btn="agendar" class="btn-primary px-6 py-3 rounded text-white">Agendar</button>
-          <a href="#contato" class="px-6 py-3 rounded border">Fale conosco</a>
+       <svg class="w-full h-64" viewbox="0 0 400 300" fill="none"><rect x="50" y="50" width="300" height="200" rx="20" fill="#E0E7FF" stroke="#667eea" stroke-width="3" /> <circle cx="200" cy="120" r="30" fill="#667eea" /> <path d="M170 120 Q200 90 230 120" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" /> <rect x="120" y="170" width="160" height="15" rx="7" fill="#A5B4FC" /> <rect x="150" y="200" width="100" height="15" rx="7" fill="#C7D2FE" />
+       </svg>
+      </div>
+      <div class="space-y-6">
+       <div>
+        <h3 class="text-2xl font-semibold mb-3">O que é Dependência de Internet?</h3>
+        <p class="text-gray-700">A dependência digital é caracterizada pelo uso excessivo e compulsivo da internet, afetando relações pessoais, trabalho e saúde mental.</p>
+       </div>
+       <div>
+        <h3 class="text-2xl font-semibold mb-3">Por que este projeto existe?</h3>
+        <p class="text-gray-700">Criamos esta plataforma para conectar instituições que promovem eventos educativos com pessoas que buscam ajuda e informação sobre uso consciente da tecnologia.</p>
+       </div>
+       <div>
+        <h3 class="text-2xl font-semibold mb-3">Nosso Impacto</h3>
+        <p class="text-gray-700">Promovemos educação digital, oferecemos testes de autoavaliação, conectamos profissionais e criamos uma comunidade de apoio mútuo.</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section><!-- Eventos -->
+   <section id="eventos" class="section-padding hidden-section">
+    <div class="max-w-7xl mx-auto">
+     <h2 class="text-4xl font-bold text-center mb-6">Eventos Disponíveis</h2>
+     <p class="text-center text-gray-600 mb-12">Palestras, workshops e atividades sobre uso consciente da internet</p>
+     <div class="flex flex-wrap gap-4 justify-center mb-12"><select id="filter-category" class="px-4 py-3 border-2 border-gray-300 rounded-full focus:border-purple-500 focus:outline-none"> <option value="">Todas Categorias</option> <option value="palestra">Palestra</option> <option value="workshop">Workshop</option> <option value="webinar">Webinar</option> <option value="atividade">Atividade Educativa</option> </select> <select id="filter-location" class="px-4 py-3 border-2 border-gray-300 rounded-full focus:border-purple-500 focus:outline-none"> <option value="">Todos Locais</option> <option value="online">Online</option> <option value="presencial">Presencial</option> </select>
+     </div>
+     <div id="events-list" class="grid md:grid-cols-3 gap-8"><!-- Events will be loaded here -->
+     </div>
+    </div>
+   </section><!-- Institution Access Screen -->
+   <section id="institution-access" class="section-padding hidden-section">
+    <div class="max-w-5xl mx-auto">
+     <h2 class="text-4xl font-bold text-center mb-12">Área das Instituições</h2>
+     <div class="grid md:grid-cols-2 gap-8"><!-- Login Form -->
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h3 class="text-2xl font-bold mb-6">Já tenho conta</h3>
+       <form id="institution-login-form" class="space-y-6">
+        <div><label for="login-email" class="block text-sm font-semibold mb-2">Email</label> <input type="email" id="login-email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
         </div>
+        <div><label for="login-password" class="block text-sm font-semibold mb-2">Senha</label> <input type="password" id="login-password" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+        </div><button type="button" id="forgot-password-btn" class="text-purple-600 hover:underline text-sm">Esqueci minha senha</button> <button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-semibold w-full">Entrar</button>
+       </form>
+      </div><!-- Registration Form -->
+      <div class="p-8 rounded-2xl shadow-lg">
+       <h3 class="text-2xl font-bold mb-6">Criar conta</h3>
+       <form id="quick-institution-form" class="space-y-6">
+        <div><label for="quick-inst-name" class="block text-sm font-semibold mb-2">Nome da Instituição</label> <input type="text" id="quick-inst-name" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+        </div>
+        <div><label for="quick-inst-email" class="block text-sm font-semibold mb-2">Email</label> <input type="email" id="quick-inst-email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+        </div>
+        <div><label for="quick-inst-phone" class="block text-sm font-semibold mb-2">Telefone</label> <input type="tel" id="quick-inst-phone" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+        </div>
+        <div><label for="quick-inst-password" class="block text-sm font-semibold mb-2">Criar Senha</label> <input type="password" id="quick-inst-password" required minlength="6" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="Mínimo 6 caracteres">
+        </div><button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-semibold w-full">Criar Conta</button>
+       </form>
       </div>
-
-      <div class="flex justify-center">
-        <img src="./assets/hero-placeholder.png" alt="Hero" class="w-full max-w-md rounded shadow" />
+     </div>
+     <div class="text-center mt-8"><button id="back-to-home-btn" class="text-gray-600 hover:text-purple-600 font-semibold">← Voltar ao Início</button>
+     </div>
+    </div>
+   </section><!-- Forgot Password Modal -->
+   <section id="forgot-password-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="padding: 20px; display: none;">
+    <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+     <h3 class="text-2xl font-bold mb-4">Recuperar Senha</h3>
+     <p class="text-gray-600 mb-6">Digite seu email para receber instruções de recuperação</p>
+     <form id="forgot-password-form" class="space-y-6">
+      <div><label for="recovery-email" class="block text-sm font-semibold mb-2">Email</label> <input type="email" id="recovery-email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
       </div>
-    </section>
+      <div class="flex gap-4"><button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-semibold flex-1">Enviar</button> <button type="button" id="close-forgot-password" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-full font-semibold">Cancelar</button>
+      </div>
+     </form>
+    </div>
+   </section><!-- Event Registration Form -->
+   <section id="event-form" class="section-padding hidden-section">
+    <div class="max-w-3xl mx-auto p-8 rounded-2xl shadow-lg">
+     <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold">Cadastro de Evento</h2><button id="logout-btn" class="text-red-500 hover:text-red-700 font-semibold">Sair</button>
+     </div>
+     <form id="event-registration-form" class="space-y-6">
+      <div><label for="event-name" class="block text-sm font-semibold mb-2">Nome do Evento</label> <input type="text" id="event-name" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="event-category" class="block text-sm font-semibold mb-2">Categoria</label> <select id="event-category" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"> <option value="">Selecione</option> <option value="palestra">Palestra</option> <option value="workshop">Workshop</option> <option value="webinar">Webinar</option> <option value="atividade">Atividade Educativa</option> </select>
+      </div>
+      <div><label for="event-date" class="block text-sm font-semibold mb-2">Data e Horário</label> <input type="datetime-local" id="event-date" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="event-location" class="block text-sm font-semibold mb-2">Local</label> <input type="text" id="event-location" required placeholder="Cidade ou 'Online'" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="event-description" class="block text-sm font-semibold mb-2">Descrição</label> <textarea id="event-description" required rows="4" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"></textarea>
+      </div>
+      <div><label for="event-vacancies" class="block text-sm font-semibold mb-2">Vagas Disponíveis</label> <input type="number" id="event-vacancies" required min="1" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="event-link" class="block text-sm font-semibold mb-2">Link de Inscrição</label> <input type="url" id="event-link" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div class="flex gap-4"><button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-semibold flex-1">Cadastrar Evento</button> <button type="button" id="cancel-event-btn" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-full font-semibold">Cancelar</button>
+      </div>
+     </form>
+    </div>
+   </section><!-- Comunidade -->
+   <section id="comunidade" class="section-padding hidden-section">
+    <div class="max-w-7xl mx-auto">
+     <h2 class="text-4xl font-bold text-center mb-6">Comunidade</h2>
+     <p class="text-center text-gray-600 mb-12">Compartilhe experiências e tire dúvidas com a comunidade</p>
+     <div class="text-center mb-12"><button id="new-topic-btn" class="btn-primary text-white px-8 py-4 rounded-full font-semibold text-lg">Novo Tópico</button>
+     </div>
+     <div id="forum-list" class="space-y-6"><!-- Forum topics will be loaded here -->
+     </div>
+    </div>
+   </section><!-- Forum Topic Form -->
+   <section id="forum-form" class="section-padding hidden-section">
+    <div class="max-w-3xl mx-auto p-8 rounded-2xl shadow-lg">
+     <h2 class="text-3xl font-bold mb-8">Novo Tópico</h2>
+     <form id="forum-topic-form" class="space-y-6">
+      <div><label for="topic-title" class="block text-sm font-semibold mb-2">Título</label> <input type="text" id="topic-title" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="topic-content" class="block text-sm font-semibold mb-2">Conteúdo</label> <textarea id="topic-content" required rows="6" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"></textarea>
+      </div>
+      <div><label for="topic-author" class="block text-sm font-semibold mb-2">Seu Nome</label> <input type="text" id="topic-author" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div class="flex gap-4"><button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-semibold flex-1">Publicar</button> <button type="button" id="cancel-forum-btn" class="bg-gray-300 text-gray-700 px-8 py-3 rounded-full font-semibold">Cancelar</button>
+      </div>
+     </form>
+    </div>
+   </section><!-- Teste de Dependência -->
+   <section id="teste" class="section-padding hidden-section">
+    <div class="max-w-4xl mx-auto">
+     <h2 class="text-4xl font-bold text-center mb-6">Teste de Dependência de Internet</h2>
+     <p class="text-center text-gray-600 mb-12">Responda honestamente para avaliar seu relacionamento com a tecnologia</p>
+     <div id="test-questions" class="space-y-8"><!-- Questions will be loaded here -->
+     </div>
+     <div id="test-result" class="hidden-section mt-12 p-8 rounded-2xl shadow-lg text-center">
+      <h3 id="result-title" class="text-3xl font-bold mb-4"></h3>
+      <p id="result-description" class="text-lg text-gray-700 mb-6"></p><button id="retake-test-btn" class="btn-primary text-white px-8 py-3 rounded-full font-semibold">Refazer Teste</button>
+     </div>
+    </div>
+   </section><!-- Artigos -->
+   <section id="artigos" class="section-padding hidden-section">
+    <div class="max-w-7xl mx-auto">
+     <h2 class="text-4xl font-bold text-center mb-12">Artigos e Conteúdos</h2>
+     <div id="articles-grid" class="grid md:grid-cols-3 gap-8"><!-- Articles will be loaded here -->
+     </div>
+    </div>
+   </section><!-- Article Detail View -->
+   <section id="article-detail" class="section-padding hidden-section">
+    <div class="max-w-4xl mx-auto"><button id="back-to-articles-btn" class="mb-8 text-purple-600 hover:text-purple-800 font-semibold flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg> Voltar aos Artigos </button>
+     <article id="article-content" class="bg-white rounded-2xl shadow-lg overflow-hidden"><!-- Article content will be loaded here -->
+     </article>
+    </div>
+   </section><!-- Contato -->
+   <section id="contato" class="section-padding hidden-section">
+    <div class="max-w-3xl mx-auto">
+     <h2 class="text-4xl font-bold text-center mb-12">Entre em Contato</h2>
+     <form id="contact-form" class="p-8 rounded-2xl shadow-lg space-y-6">
+      <div><label for="contact-name" class="block text-sm font-semibold mb-2">Nome</label> <input type="text" id="contact-name" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="contact-email" class="block text-sm font-semibold mb-2">Email</label> <input type="email" id="contact-email" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none">
+      </div>
+      <div><label for="contact-message" class="block text-sm font-semibold mb-2">Mensagem</label> <textarea id="contact-message" required rows="6" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"></textarea>
+      </div><button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-semibold w-full">Enviar Mensagem</button>
+     </form>
+     <div class="mt-12 text-center space-y-4">
+      <p class="text-lg font-semibold">Siga-nos nas Redes Sociais</p>
+      <div class="flex justify-center space-x-6"><a href="#" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 transition">
+        <svg class="w-8 h-8" fill="currentColor" viewbox="0 0 24 24">
+         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        </svg></a> <a href="#" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 transition">
+        <svg class="w-8 h-8" fill="currentColor" viewbox="0 0 24 24">
+         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+        </svg></a> <a href="#" target="_blank" rel="noopener noreferrer" class="text-purple-600 hover:text-purple-800 transition">
+        <svg class="w-8 h-8" fill="currentColor" viewbox="0 0 24 24">
+         <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+        </svg></a>
+      </div>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="gradient-bg text-white section-padding">
+    <div class="max-w-7xl mx-auto">
+     <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div>
+       <h3 class="text-xl font-bold mb-4">Equilíbrio Digital</h3>
+       <p class="opacity-90">Plataforma dedicada à conscientização sobre o uso saudável da internet.</p>
+      </div>
+      <div>
+       <h4 class="text-lg font-semibold mb-4">Links Rápidos</h4>
+       <ul class="space-y-2 opacity-90">
+        <li><a href="#inicio" class="hover:underline">Início</a></li>
+        <li><a href="#eventos" class="hover:underline">Eventos</a></li>
+        <li><a href="#comunidade" class="hover:underline">Comunidade</a></li>
+        <li><a href="#artigos" class="hover:underline">Artigos</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="text-lg font-semibold mb-4">Recursos</h4>
+       <ul class="space-y-2 opacity-90">
+        <li><button id="footer-test-link" class="hover:underline text-left">Teste de Dependência</button></li>
+        <li><a href="#artigos" class="hover:underline">Artigos</a></li>
+        <li><a href="#contato" class="hover:underline">Contato</a></li>
+       </ul>
+      </div>
+      <div>
+       <h4 class="text-lg font-semibold mb-4">Legal</h4>
+       <ul class="space-y-2 opacity-90">
+        <li><a href="#" class="hover:underline">Termos de Uso</a></li>
+        <li><a href="#" class="hover:underline">Política de Privacidade</a></li>
+        <li><a href="#" class="hover:underline">Suporte</a></li>
+       </ul>
+      </div>
+     </div>
+     <div class="border-t border-white border-opacity-20 pt-8 text-center opacity-90">
+      <p>© 2024 Equilíbrio Digital. Todos os direitos reservados.</p>
+     </div>
+    </div>
+   </footer><!-- WhatsApp Float Button -->
+   <div class="whatsapp-float" onclick="window.open('https://wa.me/5511999999999', '_blank', 'noopener,noreferrer')">
+    <svg class="w-8 h-8 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      background_color: "#f9fafb",
+      surface_color: "#ffffff",
+      text_color: "#1f2937",
+      primary_action_color: "#667eea",
+      secondary_action_color: "#764ba2",
+      hero_title: "Conectando Pessoas e Instituições para um Uso Consciente da Internet",
+      hero_subtitle: "Plataforma para eventos, comunidade e testes sobre dependência digital",
+      about_title: "Sobre o Equilíbrio Digital",
+      cta_button_text: "Explorar Eventos",
+      font_family: "system-ui",
+      font_size: 16
+    };
 
-    <!-- EVENTOS -->
-    <section id="eventos" class="bg-white mt-6 py-12">
-      <div class="max-w-6xl mx-auto px-6">
-        <h2 class="text-3xl font-semibold mb-6">Eventos</h2>
+    let allData = [];
+    let currentRecordCount = 0;
+    let loggedInstitution = null;
 
-        <div class="grid md:grid-cols-3 gap-6">
-          <!-- Card 1 -->
-          <article class="bg-gray-50 p-4 rounded shadow-sm">
-            <img src="./assets/event1.png" alt="Evento 1" class="w-full h-40 object-cover rounded mb-3">
-            <h3 class="font-medium">Workshop - Saúde Digital</h3>
-            <p class="text-sm text-gray-600 mb-3">Data: 01/12/2025 • Local: Online</p>
-            <div class="flex gap-2">
-              <button class="px-3 py-2 rounded bg-indigo-600 text-white" data-event-open='{"title":"Workshop - Saúde Digital","desc":"Workshop sobre hábitos digitais saudáveis","img":"./assets/event1.png","date":"01/12/2025"}'>Ver detalhes</button>
-              <button class="px-3 py-2 rounded border" data-btn="inscrever">Inscrever-se</button>
+    const testQuestions = [
+      { id: 1, question: "Você sente ansiedade ou desconforto quando fica sem internet?", options: ["Nunca (0)", "Raramente (1)", "Às vezes (2)", "Frequentemente (3)", "Sempre (4)"] },
+      { id: 2, question: "Perde a noção do tempo quando está navegando na internet?", options: ["Nunca (0)", "Raramente (1)", "Às vezes (2)", "Frequentemente (3)", "Sempre (4)"] },
+      { id: 3, question: "Prefere interações online ao contato presencial com amigos/família?", options: ["Nunca (0)", "Raramente (1)", "Às vezes (2)", "Frequentemente (3)", "Sempre (4)"] },
+      { id: 4, question: "A internet já causou problemas no seu trabalho, estudos ou relacionamentos?", options: ["Nunca (0)", "Raramente (1)", "Às vezes (2)", "Frequentemente (3)", "Sempre (4)"] },
+      { id: 5, question: "Verifica redes sociais ou notificações logo ao acordar?", options: ["Nunca (0)", "Raramente (1)", "Às vezes (2)", "Frequentemente (3)", "Sempre (4)"] }
+    ];
+
+    const articles = [
+      {
+        id: 1,
+        title: "Como Identificar Sinais de Dependência Digital",
+        excerpt: "Aprenda a reconhecer os principais sintomas e comportamentos associados ao uso excessivo da internet.",
+        category: "Saúde Mental",
+        readTime: "8 min",
+        author: "Dr. Ana Silva",
+        date: "15 de Dezembro, 2024",
+        content: `
+          <p>A dependência digital tornou-se uma preocupação crescente na sociedade moderna. Com o aumento do tempo que passamos conectados, é fundamental reconhecer quando o uso da tecnologia se torna problemático.</p>
+
+          <h3>Principais Sinais de Alerta</h3>
+          
+          <p><strong>1. Perda de Controle sobre o Tempo</strong></p>
+          <p>Um dos primeiros sinais é quando você perde a noção do tempo ao usar dispositivos digitais. Se percebe que horas passaram sem que você notasse, ou se frequentemente fica online muito mais tempo do que planejava, este é um sinal de alerta importante.</p>
+
+          <p><strong>2. Ansiedade ao Ficar Desconectado</strong></p>
+          <p>Sentir desconforto, ansiedade ou irritabilidade quando não pode acessar a internet é outro indicador significativo. Esta sensação constante de "precisar verificar" o celular ou redes sociais pode indicar uma relação pouco saudável com a tecnologia.</p>
+
+          <p><strong>3. Impacto nas Relações Pessoais</strong></p>
+          <p>Quando o tempo online começa a prejudicar relacionamentos importantes, é hora de reavaliar seus hábitos. Isso pode incluir preferir interações digitais a conversas presenciais, ou ignorar pessoas próximas em favor de dispositivos eletrônicos.</p>
+
+          <h3>Sintomas Físicos e Emocionais</h3>
+          
+          <ul>
+            <li>Fadiga ocular e dores de cabeça frequentes</li>
+            <li>Problemas de sono, especialmente por uso antes de dormir</li>
+            <li>Dores nas costas, pescoço e punhos</li>
+            <li>Mudanças de humor relacionadas ao uso de tecnologia</li>
+            <li>Diminuição da atividade física</li>
+            <li>Negligência de autocuidado e alimentação</li>
+          </ul>
+
+          <h3>Comportamentos de Risco</h3>
+          
+          <p>Alguns comportamentos específicos merecem atenção especial:</p>
+          
+          <ul>
+            <li>Verificar o celular imediatamente ao acordar</li>
+            <li>Usar dispositivos durante refeições</li>
+            <li>Sentir necessidade de documentar constantemente a vida em redes sociais</li>
+            <li>Dificuldade em realizar tarefas sem consultar o celular</li>
+            <li>Mentir sobre o tempo gasto online</li>
+            <li>Usar a internet como fuga de problemas ou emoções negativas</li>
+          </ul>
+
+          <h3>Impacto no Desempenho</h3>
+          
+          <p>A dependência digital frequentemente afeta:</p>
+          <ul>
+            <li><strong>Trabalho/Estudos:</strong> Procrastinação, dificuldade de concentração, prazos perdidos</li>
+            <li><strong>Produtividade:</strong> Interrupções constantes, multitarefa excessiva</li>
+            <li><strong>Criatividade:</strong> Redução do pensamento profundo e tempo para reflexão</li>
+            <li><strong>Memória:</strong> Dependência excessiva de dispositivos para lembrar informações</li>
+          </ul>
+
+          <h3>O Que Fazer Se Identificar Esses Sinais</h3>
+          
+          <p>Se você reconheceu vários desses sinais em seu comportamento, não se desespere. O primeiro passo é o reconhecimento, e existem várias estratégias que podem ajudar:</p>
+          
+          <ul>
+            <li>Faça um auto-diagnóstico honesto usando nosso teste de dependência</li>
+            <li>Estabeleça limites claros para o uso de tecnologia</li>
+            <li>Busque apoio profissional se necessário</li>
+            <li>Participe de grupos de apoio e comunidades conscientes</li>
+            <li>Desenvolva hobbies e atividades offline</li>
+          </ul>
+
+          <p>Lembre-se: buscar ajuda é um sinal de força, não de fraqueza. Nossa plataforma oferece recursos, eventos e uma comunidade de apoio para ajudá-lo nessa jornada.</p>
+        `
+      },
+      {
+        id: 2,
+        title: "Dicas Práticas Para Um Uso Saudável da Tecnologia",
+        excerpt: "Estratégias comprovadas para equilibrar sua vida digital e manter o bem-estar mental.",
+        category: "Bem-Estar",
+        readTime: "10 min",
+        author: "Prof. Carlos Mendes",
+        date: "10 de Dezembro, 2024",
+        content: `
+          <p>Desenvolver uma relação saudável com a tecnologia não significa abandoná-la completamente, mas sim usá-la de forma consciente e equilibrada. Aqui estão estratégias práticas e eficazes.</p>
+
+          <h3>1. Estabeleça Zonas Livres de Tecnologia</h3>
+          
+          <p><strong>No Quarto:</strong></p>
+          <p>Mantenha o quarto como um santuário livre de telas. Use um despertador tradicional em vez do celular e evite dispositivos eletrônicos pelo menos uma hora antes de dormir. A luz azul das telas interfere na produção de melatonina, prejudicando a qualidade do sono.</p>
+          
+          <p><strong>Durante as Refeições:</strong></p>
+          <p>Faça das refeições um momento de conexão real. Deixe os dispositivos em outro cômodo e concentre-se na comida e na companhia. Isso melhora a digestão e fortalece relacionamentos.</p>
+
+          <h3>2. Implemente a Regra 20-20-20</h3>
+          
+          <p>Para cada 20 minutos olhando para uma tela, faça uma pausa de 20 segundos e olhe para algo a 20 pés (cerca de 6 metros) de distância. Isso reduz significativamente a fadiga ocular e previne problemas de visão a longo prazo.</p>
+
+          <h3>3. Use Ferramentas de Monitoramento</h3>
+          
+          <p>Configure limites de tempo nos aplicativos mais usados:</p>
+          <ul>
+            <li>Ative o "Tempo de Tela" no iOS ou "Bem-Estar Digital" no Android</li>
+            <li>Estabeleça metas diárias realistas</li>
+            <li>Receba alertas quando ultrapassar limites</li>
+            <li>Analise semanalmente seus padrões de uso</li>
+          </ul>
+
+          <h3>4. Pratique o Detox Digital Semanal</h3>
+          
+          <p>Reserve um dia ou período da semana para desconectar completamente:</p>
+          <ul>
+            <li>Escolha um dia fixo (ex: domingos de manhã)</li>
+            <li>Informe amigos e família sobre sua indisponibilidade</li>
+            <li>Planeje atividades alternativas prazerosas</li>
+            <li>Use esse tempo para hobbies, natureza ou socialização presencial</li>
+          </ul>
+
+          <h3>5. Reorganize Seu Ambiente Digital</h3>
+          
+          <p><strong>No Smartphone:</strong></p>
+          <ul>
+            <li>Desative notificações não essenciais</li>
+            <li>Organize apps por prioridade, não por conveniência</li>
+            <li>Use modo escala de cinza para reduzir atração visual</li>
+            <li>Remova apps viciantes da tela principal</li>
+          </ul>
+
+          <p><strong>No Computador:</strong></p>
+          <ul>
+            <li>Use bloqueadores de sites durante horários de trabalho</li>
+            <li>Mantenha apenas abas essenciais abertas</li>
+            <li>Desative notificações de e-mail</li>
+            <li>Crie perfis separados para trabalho e lazer</li>
+          </ul>
+
+          <h3>Conclusão</h3>
+          
+          <p>O objetivo não é eliminar a tecnologia da sua vida, mas usá-la de forma que ela sirva a você, não o contrário. Cada pequena mudança contribui para uma vida mais equilibrada e plena.</p>
+        `
+      },
+      {
+        id: 3,
+        title: "O Impacto das Redes Sociais na Saúde Mental",
+        excerpt: "Entenda como o uso constante de redes sociais pode afetar seu estado emocional e aprenda a se proteger.",
+        category: "Psicologia",
+        readTime: "12 min",
+        author: "Dra. Beatriz Costa",
+        date: "5 de Dezembro, 2024",
+        content: `
+          <p>As redes sociais transformaram radicalmente a forma como nos comunicamos e nos relacionamos. Embora ofereçam benefícios inquestionáveis, estudos recentes revelam impactos significativos na saúde mental que merecem nossa atenção.</p>
+
+          <h3>O Paradoxo da Conexão</h3>
+          
+          <p>Embora as redes sociais prometam nos conectar, pesquisas demonstram que seu uso excessivo pode levar a sentimentos de solidão e isolamento. Este fenômeno, conhecido como "paradoxo da conexão", ocorre quando substituímos interações profundas e significativas por conexões superficiais e numerosas.</p>
+
+          <p><strong>Dados Reveladores:</strong></p>
+          <ul>
+            <li>Pessoas que passam mais de 2 horas diárias em redes sociais têm 2x mais chances de relatar solidão</li>
+            <li>71% dos usuários relatam comparação social frequente</li>
+            <li>45% se sentem sobrecarregados pela quantidade de informação</li>
+          </ul>
+
+          <h3>A Cultura da Comparação</h3>
+          
+          <p>Um dos aspectos mais prejudiciais das redes sociais é a tendência natural de nos compararmos com outros. Vemos apenas os "destaques" da vida alheia - as férias perfeitas, os relacionamentos ideais, as conquistas profissionais - criando uma percepção distorcida da realidade.</p>
+
+          <p><strong>Efeitos Psicológicos da Comparação Constante:</strong></p>
+          <ul>
+            <li><strong>Baixa autoestima:</strong> Sentir que sua vida não é "boa o suficiente"</li>
+            <li><strong>FOMO (Fear of Missing Out):</strong> Medo constante de estar perdendo experiências</li>
+            <li><strong>Ansiedade social:</strong> Preocupação excessiva com percepção alheia</li>
+            <li><strong>Perfeccionismo:</strong> Pressão para apresentar uma imagem impecável</li>
+            <li><strong>Insatisfação crônica:</strong> Sentimento persistente de inadequação</li>
+          </ul>
+
+          <h3>Estratégias de Proteção</h3>
+          
+          <p><strong>1. Consumo Consciente</strong></p>
+          <ul>
+            <li>Defina horários específicos para checar redes sociais</li>
+            <li>Use temporizadores e limites de aplicativos</li>
+            <li>Desative notificações não essenciais</li>
+            <li>Pratique "scrolling intencional" - saiba por que está navegando</li>
+          </ul>
+
+          <p>Lembre-se: Sua saúde mental é mais importante que qualquer número de curtidas ou seguidores. Se as redes sociais estão causando sofrimento, é completamente válido reduzir o uso ou até mesmo fazer pausas prolongadas.</p>
+        `
+      },
+      {
+        id: 4,
+        title: "Gestão do Tempo Digital: Técnicas Comprovadas",
+        excerpt: "Aprenda métodos eficazes para controlar seu tempo online e aumentar sua produtividade.",
+        category: "Produtividade",
+        readTime: "9 min",
+        author: "Prof. Ricardo Alves",
+        date: "1 de Dezembro, 2024",
+        content: `
+          <p>O tempo é nosso recurso mais valioso, e na era digital, protegê-lo tornou-se um desafio crucial. Este guia apresenta técnicas comprovadas para recuperar o controle sobre seu tempo digital.</p>
+
+          <h3>O Problema da Fragmentação de Atenção</h3>
+          
+          <p>Estudos mostram que levamos em média 23 minutos para recuperar o foco total após uma interrupção digital. Considerando que verificamos nossos smartphones 96 vezes por dia, perdemos horas preciosas apenas em transições de atenção.</p>
+
+          <h3>1. Técnica Pomodoro Digital</h3>
+          
+          <p>Adaptação da técnica clássica para o contexto digital:</p>
+          <ul>
+            <li><strong>25 minutos:</strong> Foco total, dispositivos em modo avião</li>
+            <li><strong>5 minutos:</strong> Pausa para verificar mensagens essenciais</li>
+            <li><strong>Após 4 ciclos:</strong> Pausa longa de 15-30 minutos longe de telas</li>
+          </ul>
+
+          <p><strong>Ferramentas úteis:</strong> Forest, Focus@Will, Tomato Timer</p>
+
+          <h3>2. Bloqueio de Tempo Profundo</h3>
+          
+          <p>Reserve blocos ininterruptos para trabalho focado:</p>
+          <ul>
+            <li>Identifique suas horas de maior produtividade</li>
+            <li>Agende blocos de 2-4 horas sem interrupções</li>
+            <li>Comunique sua indisponibilidade à equipe</li>
+            <li>Desative todas as notificações</li>
+            <li>Use bloqueadores de site se necessário</li>
+          </ul>
+
+          <h3>3. Matriz de Eisenhower Digital</h3>
+          
+          <p>Classifique suas atividades digitais:</p>
+          
+          <p><strong>Urgente e Importante:</strong> Responda imediatamente</p>
+          <ul>
+            <li>Crises de trabalho</li>
+            <li>Questões familiares urgentes</li>
+          </ul>
+
+          <p><strong>Importante mas Não Urgente:</strong> Agende horários específicos</p>
+          <ul>
+            <li>E-mails importantes</li>
+            <li>Planejamento</li>
+            <li>Aprendizado</li>
+          </ul>
+
+          <p><strong>Nem Urgente Nem Importante:</strong> Elimine</p>
+          <ul>
+            <li>Scroll infinito em redes sociais</li>
+            <li>Notícias sensacionalistas</li>
+            <li>Fofocas digitais</li>
+          </ul>
+
+          <h3>Conclusão</h3>
+          
+          <p>Gestão de tempo digital não é sobre perfeição, mas sobre progresso consistente. Comece com uma ou duas técnicas e expanda gradualmente. Seu eu futuro agradecerá!</p>
+        `
+      },
+      {
+        id: 5,
+        title: "Tecnologia e Desenvolvimento Infantil: Guia Para Pais",
+        excerpt: "Como estabelecer limites saudáveis e educar crianças para um uso consciente da tecnologia.",
+        category: "Educação",
+        readTime: "15 min",
+        author: "Dra. Mariana Santos",
+        date: "28 de Novembro, 2024",
+        content: `
+          <p>A tecnologia está intrinsecamente ligada à vida das crianças modernas. Como pais e educadores, nossa responsabilidade é guiá-las para um uso saudável e produtivo, em vez de simplesmente proibir ou permitir sem limites.</p>
+
+          <h3>Entendendo os Impactos no Desenvolvimento</h3>
+          
+          <p><strong>Desenvolvimento Cognitivo:</strong></p>
+          <ul>
+            <li><strong>0-2 anos:</strong> Telas devem ser evitadas (exceto videochamadas). O cérebro necessita de interação humana real para desenvolvimento adequado</li>
+            <li><strong>2-5 anos:</strong> Máximo 1 hora/dia de conteúdo educativo de alta qualidade, sempre com supervisão ativa</li>
+            <li><strong>6-12 anos:</strong> 1-2 horas/dia, com foco em conteúdo educativo e criativo</li>
+            <li><strong>Adolescentes:</strong> Limites acordados em família, com foco em responsabilidade e autogestão</li>
+          </ul>
+
+          <h3>Criando Regras Familiares Efetivas</h3>
+          
+          <p><strong>1. Zonas Livres de Tecnologia</strong></p>
+          <ul>
+            <li><strong>Quartos:</strong> Nenhum dispositivo eletrônico para dormir</li>
+            <li><strong>Mesa de jantar:</strong> Refeições são momentos de conexão familiar</li>
+            <li><strong>Carro:</strong> Tempo para conversar e observar o mundo</li>
+            <li><strong>Banheiro:</strong> Evitar associação entre dispositivos e momentos de privacidade</li>
+          </ul>
+
+          <h3>Educação Digital: Ensinando Uso Consciente</h3>
+          
+          <p><strong>Alfabetização Digital:</strong></p>
+          <ul>
+            <li>Ensine pensamento crítico sobre conteúdo online</li>
+            <li>Explique como algoritmos funcionam e por que vemos certo conteúdo</li>
+            <li>Discuta publicidade e técnicas de persuasão</li>
+            <li>Aborde fake news e checagem de fontes</li>
+            <li>Trabalhe conceitos de privacidade e pegada digital</li>
+          </ul>
+
+          <p>Criar filhos na era digital é desafiador, mas você não está sozinho. O objetivo não é criar uma bolha livre de tecnologia, mas sim crianças resilientes, conscientes e capazes de usar tecnologia como ferramenta, não como muleta emocional.</p>
+        `
+      },
+      {
+        id: 6,
+        title: "Mindfulness Digital: Vivendo o Presente na Era Conectada",
+        excerpt: "Práticas de atenção plena para recuperar presença e intencionalidade no uso da tecnologia.",
+        category: "Mindfulness",
+        readTime: "11 min",
+        author: "Mestre João Ferreira",
+        date: "25 de Novembro, 2024",
+        content: `
+          <p>Em um mundo de notificações constantes e distrações infinitas, a prática de mindfulness digital oferece um caminho para recuperar nossa presença, atenção e intencionalidade. Este guia explora como integrar consciência plena ao nosso uso de tecnologia.</p>
+
+          <h3>O Que É Mindfulness Digital?</h3>
+          
+          <p>Mindfulness digital é a prática de trazer atenção plena, intencional e não-julgadora para nossas interações com tecnologia. Não se trata de rejeitar o mundo digital, mas de habitá-lo com mais consciência e escolha deliberada.</p>
+
+          <p><strong>Princípios Fundamentais:</strong></p>
+          <ul>
+            <li><strong>Intenção:</strong> Saber por que estamos usando tecnologia antes de pegá-la</li>
+            <li><strong>Atenção:</strong> Estar presente com o que fazemos digitalmente</li>
+            <li><strong>Atitude:</strong> Aproximar-se do uso digital sem julgamento, mas com curiosidade</li>
+            <li><strong>Escolha:</strong> Responder conscientemente em vez de reagir automaticamente</li>
+          </ul>
+
+          <h3>Práticas Fundamentais de Mindfulness Digital</h3>
+          
+          <p><strong>1. A Pausa Antes de Pegar</strong></p>
+          <p>Antes de pegar qualquer dispositivo, faça uma pausa de 3 respirações e pergunte:</p>
+          <ul>
+            <li>"Por que estou pegando este dispositivo agora?"</li>
+            <li>"O que especificamente quero fazer?"</li>
+            <li>"Quanto tempo pretendo usar?"</li>
+            <li>"Esta é realmente a melhor opção neste momento?"</li>
+          </ul>
+
+          <p><strong>2. Respiração Digital</strong></p>
+          <p>Configure lembretes a cada hora para fazer este exercício de 1 minuto:</p>
+          <ul>
+            <li>Pare o que está fazendo</li>
+            <li>Feche os olhos (se possível)</li>
+            <li>Tome 5 respirações profundas e conscientes</li>
+            <li>Observe sensações no corpo</li>
+            <li>Pergunte: "Esta atividade está servindo a mim?"</li>
+            <li>Continue ou ajuste conscientemente</li>
+          </ul>
+
+          <h3>Conclusão: Presença Como Poder</h3>
+          
+          <p>Em um mundo que lucra com nossa distração, presença é um ato revolucionário. Mindfulness digital não é sobre rejeitar tecnologia, mas sobre recuperar nossa agência sobre como, quando e por que a usamos.</p>
+
+          <p>Comece hoje. Comece agora. Comece com uma respiração consciente. O presente está esperando por você.</p>
+        `
+      }
+    ];
+
+    const dataHandler = {
+      onDataChanged(data) {
+        allData = data;
+        currentRecordCount = data.length;
+        renderEvents(data);
+        renderForumTopics(data);
+      }
+    };
+
+    async function onConfigChange(config) {
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontSize = config.font_size || defaultConfig.font_size;
+
+      document.body.style.backgroundColor = bgColor;
+      document.body.style.color = textColor;
+      document.body.style.fontFamily = `${customFont}, system-ui, -apple-system, sans-serif`;
+      document.body.style.fontSize = `${baseFontSize}px`;
+
+      const header = document.getElementById('header');
+      header.style.backgroundColor = surfaceColor;
+      header.style.color = textColor;
+
+      const logoText = document.getElementById('logo-text');
+      logoText.style.color = primaryColor;
+      logoText.style.fontSize = `${baseFontSize * 1.5}px`;
+
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.style.color = textColor;
+        link.style.fontSize = `${baseFontSize}px`;
+      });
+
+      const heroTitle = document.getElementById('hero-title');
+      heroTitle.textContent = config.hero_title || defaultConfig.hero_title;
+      heroTitle.style.fontFamily = `${customFont}, system-ui, -apple-system, sans-serif`;
+      heroTitle.style.fontSize = `${baseFontSize * 3}px`;
+
+      const heroSubtitle = document.getElementById('hero-subtitle');
+      heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
+      heroSubtitle.style.fontFamily = `${customFont}, system-ui, -apple-system, sans-serif`;
+      heroSubtitle.style.fontSize = `${baseFontSize * 1.25}px`;
+
+      const aboutTitle = document.getElementById('about-title');
+      aboutTitle.textContent = config.about_title || defaultConfig.about_title;
+      aboutTitle.style.color = textColor;
+      aboutTitle.style.fontFamily = `${customFont}, system-ui, -apple-system, sans-serif`;
+      aboutTitle.style.fontSize = `${baseFontSize * 2}px`;
+
+      const exploreBtn = document.getElementById('explore-events-btn');
+      exploreBtn.textContent = config.cta_button_text || defaultConfig.cta_button_text;
+      exploreBtn.style.fontSize = `${baseFontSize * 1.125}px`;
+
+      const primaryButtons = document.querySelectorAll('.btn-primary');
+      primaryButtons.forEach(btn => {
+        btn.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+        btn.style.fontSize = `${baseFontSize}px`;
+      });
+
+      const allSurfaces = document.querySelectorAll('.shadow-lg, .card-hover');
+      allSurfaces.forEach(surface => {
+        surface.style.backgroundColor = surfaceColor;
+        surface.style.color = textColor;
+      });
+
+      const headings = document.querySelectorAll('h2, h3, h4');
+      headings.forEach(heading => {
+        heading.style.color = textColor;
+        heading.style.fontFamily = `${customFont}, system-ui, -apple-system, sans-serif`;
+      });
+
+      document.querySelectorAll('h2').forEach(h => h.style.fontSize = `${baseFontSize * 2}px`);
+      document.querySelectorAll('h3').forEach(h => h.style.fontSize = `${baseFontSize * 1.5}px`);
+      document.querySelectorAll('h4').forEach(h => h.style.fontSize = `${baseFontSize * 1.25}px`);
+
+      const paragraphs = document.querySelectorAll('p, li, label, input, textarea, select');
+      paragraphs.forEach(p => {
+        p.style.fontSize = `${baseFontSize}px`;
+        p.style.fontFamily = `${customFont}, system-ui, -apple-system, sans-serif`;
+      });
+    }
+
+    function renderArticles() {
+      const container = document.getElementById('articles-grid');
+      
+      container.innerHTML = articles.map((article, index) => {
+        const gradients = [
+          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+          'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+          'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+          'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+          'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+        ];
+        
+        return `
+          <article class="card-hover rounded-2xl shadow-lg overflow-hidden cursor-pointer" onclick="showArticleDetail(${article.id})">
+            <div class="w-full h-48 flex items-center justify-center" style="background: ${gradients[index % gradients.length]};">
+              <span class="text-6xl">📚</span>
+            </div>
+            <div class="p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-3 py-1 rounded-full text-sm font-semibold" style="background: #E0E7FF; color: #667eea;">${article.category}</span>
+                <span class="text-sm text-gray-500">⏱️ ${article.readTime}</span>
+              </div>
+              <h3 class="text-xl font-bold mb-2">${article.title}</h3>
+              <p class="text-gray-600 mb-4">${article.excerpt}</p>
+              <div class="flex items-center justify-between text-sm text-gray-500">
+                <span>Por ${article.author}</span>
+                <span>${article.date}</span>
+              </div>
             </div>
           </article>
+        `;
+      }).join('');
+    }
 
-          <!-- Card 2 -->
-          <article class="bg-gray-50 p-4 rounded shadow-sm">
-            <img src="./assets/event2.png" alt="Evento 2" class="w-full h-40 object-cover rounded mb-3">
-            <h3 class="font-medium">Palestra - Bem Estar</h3>
-            <p class="text-sm text-gray-600 mb-3">Data: 10/12/2025 • Local: Auditório X</p>
-            <div class="flex gap-2">
-              <button class="px-3 py-2 rounded bg-indigo-600 text-white" data-event-open='{"title":"Palestra - Bem Estar","desc":"Palestra presencial sobre bem estar e rotina","img":"./assets/event2.png","date":"10/12/2025"}'>Ver detalhes</button>
-              <button class="px-3 py-2 rounded border" data-btn="inscrever">Inscrever-se</button>
-            </div>
-          </article>
+    function showArticleDetail(articleId) {
+      const article = articles.find(a => a.id === articleId);
+      if (!article) return;
 
-          <!-- Card 3 -->
-          <article class="bg-gray-50 p-4 rounded shadow-sm">
-            <img src="./assets/event3.png" alt="Evento 3" class="w-full h-40 object-cover rounded mb-3">
-            <h3 class="font-medium">Roda de Conversa</h3>
-            <p class="text-sm text-gray-600 mb-3">Data: 20/12/2025 • Local: Online</p>
-            <div class="flex gap-2">
-              <button class="px-3 py-2 rounded bg-indigo-600 text-white" data-event-open='{"title":"Roda de Conversa","desc":"Espaço de troca com profissionais","img":"./assets/event3.png","date":"20/12/2025"}'>Ver detalhes</button>
-              <button class="px-3 py-2 rounded border" data-btn="inscrever">Inscrever-se</button>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- SOBRE -->
-    <section id="sobre" class="max-w-6xl mx-auto p-6 mt-8">
-      <h2 class="text-3xl font-semibold mb-4">Sobre</h2>
-      <p class="text-gray-700">Somos uma iniciativa dedicada a promover saúde digital por meio de workshops, palestras e conteúdos educativos.</p>
-    </section>
-
-    <!-- CONTATO -->
-    <section id="contato" class="max-w-3xl mx-auto p-6 mt-8 bg-white rounded shadow">
-      <h2 class="text-2xl font-semibold mb-4">Contato</h2>
-
-      <form id="formContato">
-        <div class="grid md:grid-cols-2 gap-4">
-          <input name="nome" type="text" placeholder="Seu nome" required class="p-3 border rounded" />
-          <input name="email" type="email" placeholder="Seu e-mail" required class="p-3 border rounded" />
-          <input name="telefone" type="tel" placeholder="Telefone (opcional)" class="p-3 border rounded" />
-        </div>
-
-        <textarea name="mensagem" rows="4" placeholder="Mensagem" class="w-full p-3 border rounded mt-4"></textarea>
-
-        <div class="flex items-center justify-between mt-4">
-          <button type="submit" class="bg-indigo-600 text-white px-5 py-3 rounded">Enviar</button>
-          <div id="formStatus" class="text-sm text-gray-600"></div>
-        </div>
-      </form>
-    </section>
-
-    <footer class="max-w-6xl mx-auto p-6 text-center text-sm text-gray-500 mt-8">
-      © <span id="ano"></span> Equilíbrio Digital
-    </footer>
-  </main>
-
-  <!-- Modal de evento -->
-  <div id="modalEvent" class="fixed inset-0 hidden items-center justify-center z-50">
-    <div class="modal-backdrop absolute inset-0"></div>
-    <div class="relative bg-white w-full max-w-2xl rounded shadow-lg z-10 p-6">
-      <button id="modalClose" class="absolute top-3 right-3 text-gray-500">✕</button>
-      <div class="flex gap-4">
-        <img id="modalImg" src="" alt="evento" class="w-40 h-28 object-cover rounded" />
-        <div>
-          <h3 id="modalTitle" class="text-xl font-semibold"></h3>
-          <p id="modalDate" class="text-sm text-gray-600 mb-2"></p>
-          <p id="modalDesc" class="text-gray-700"></p>
-          <div class="mt-4">
-            <button id="modalInscrever" class="bg-indigo-600 text-white px-4 py-2 rounded">Inscrever-se</button>
+      const container = document.getElementById('article-content');
+      
+      const gradients = [
+        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+        'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+      ];
+      
+      container.innerHTML = `
+        <div class="w-full h-80 flex items-center justify-center" style="background: ${gradients[(articleId - 1) % gradients.length]};">
+          <div class="text-center text-white">
+            <span class="text-8xl block mb-4">📖</span>
+            <span class="px-4 py-2 rounded-full text-sm font-semibold bg-white bg-opacity-20">${article.category}</span>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="p-8 md:p-12">
+          <div class="flex flex-wrap gap-4 items-center text-sm text-gray-500 mb-6">
+            <span>📅 ${article.date}</span>
+            <span>•</span>
+            <span>✍️ ${article.author}</span>
+            <span>•</span>
+            <span>⏱️ ${article.readTime} de leitura</span>
+          </div>
+          
+          <h1 class="text-4xl md:text-5xl font-bold mb-8">${article.title}</h1>
+          
+          <div class="article-content prose prose-lg max-w-none">
+            ${article.content}
+          </div>
+          
+          <div class="mt-12 p-6 bg-purple-50 rounded-2xl">
+            <h3 class="text-2xl font-bold mb-4">💬 Gostou deste artigo?</h3>
+            <p class="text-gray-700 mb-6">Compartilhe sua experiência na nossa comunidade ou participe de eventos sobre este tema!</p>
+            <div class="flex flex-wrap gap-4">
+              <button onclick="navigateToSection('comunidade')" class="btn-primary text-white px-6 py-3 rounded-full font-semibold">
+                Ir para Comunidade
+              </button>
+              <button onclick="navigateToSection('eventos')" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold hover:bg-gray-300">
+                Ver Eventos
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
 
-  <!-- Botão WhatsApp flutuante -->
-  <button id="whatsappBtn" class="whatsapp-float fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center z-50" title="WhatsApp">
-    <img src="./assets/whatsapp-icon.png" alt="wa" class="w-8 h-8" />
-  </button>
+      navigateToSection('article-detail');
+    }
 
-  <!-- Scripts -->
-  <script src="./js/app.js"></script>
-</body>
+    function renderEvents(data) {
+      const container = document.getElementById('events-list');
+      const categoryFilter = document.getElementById('filter-category')?.value || '';
+      const locationFilter = document.getElementById('filter-location')?.value || '';
+      
+      let events = data.filter(item => item.type === 'event');
+      
+      if (categoryFilter) {
+        events = events.filter(e => e.event_category === categoryFilter);
+      }
+      
+      if (locationFilter) {
+        events = events.filter(e => 
+          locationFilter === 'online' 
+            ? e.event_location.toLowerCase() === 'online'
+            : e.event_location.toLowerCase() !== 'online'
+        );
+      }
+      
+      if (events.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12">
+            <svg class="w-24 h-24 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <p class="text-gray-500 text-lg">Nenhum evento encontrado</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = events.map(event => {
+        const eventDate = new Date(event.event_date);
+        const formattedDate = eventDate.toLocaleDateString('pt-BR', { 
+          day: '2-digit', 
+          month: 'long', 
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        return `
+          <div class="card-hover p-6 rounded-2xl shadow-lg relative">
+            <button onclick="deleteEvent('${event.__backendId}')" class="absolute top-4 right-4 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center font-bold transition" title="Excluir evento">×</button>
+            <div class="w-full h-48 rounded-lg mb-4 flex items-center justify-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <span class="text-white text-4xl">📅</span>
+            </div>
+            <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold mb-3" style="background: #E0E7FF; color: #667eea;">${event.event_category}</span>
+            <h3 class="text-xl font-bold mb-2">${event.event_name}</h3>
+            <p class="text-gray-600 mb-4">${event.event_description}</p>
+            <div class="space-y-2 text-sm text-gray-500 mb-4">
+              <p>📍 ${event.event_location}</p>
+              <p>🕐 ${formattedDate}</p>
+              <p>👥 ${event.event_vacancies} vagas</p>
+            </div>
+            ${event.event_link ? `<a href="${event.event_link}" target="_blank" rel="noopener noreferrer" class="btn-primary text-white px-6 py-2 rounded-full font-semibold inline-block w-full text-center">Inscrever-se</a>` : `<button onclick="confirmParticipation('${event.__backendId}', '${event.event_name}')" class="btn-primary text-white px-6 py-2 rounded-full font-semibold w-full">Participar</button>`}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderForumTopics(data) {
+      const container = document.getElementById('forum-list');
+      const topics = data.filter(item => item.type === 'forum');
+      
+      if (topics.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 rounded-2xl shadow-lg p-8">
+            <svg class="w-24 h-24 mx-auto mb-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/>
+            </svg>
+            <p class="text-gray-500 text-lg">Nenhum tópico publicado ainda. Seja o primeiro!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = topics.map(topic => {
+        const createdDate = new Date(topic.created_at);
+        const formattedDate = createdDate.toLocaleDateString('pt-BR', { 
+          day: '2-digit', 
+          month: 'short', 
+          year: 'numeric'
+        });
+        
+        return `
+          <div class="card-hover p-6 rounded-2xl shadow-lg">
+            <div class="flex items-start justify-between mb-4">
+              <div class="flex-1">
+                <h3 class="text-xl font-bold mb-2">${topic.forum_title}</h3>
+                <p class="text-gray-600">${topic.forum_content}</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-gray-500">
+              <span>Por ${topic.user_name}</span>
+              <div class="flex items-center space-x-4">
+                <span>${formattedDate}</span>
+                <button class="flex items-center space-x-1 text-purple-600 hover:text-purple-800" onclick="likeTopic('${topic.__backendId}')">
+                  <span>❤️</span>
+                  <span>${topic.forum_likes || 0}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function likeTopic(topicId) {
+      const topic = allData.find(item => item.__backendId === topicId);
+      if (!topic) return;
+
+      topic.forum_likes = (topic.forum_likes || 0) + 1;
+      
+      const result = await window.dataSdk.update(topic);
+      if (!result.isOk) {
+        showMessage('Erro ao curtir tópico', 'error');
+      }
+    }
+
+    async function confirmParticipation(eventId, eventName) {
+      const overlay = document.createElement('div');
+      overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+      overlay.style.padding = '20px';
+      overlay.innerHTML = `
+        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+          <div class="text-center mb-6">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-5xl">✅</span>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Participação Confirmada!</h3>
+            <p class="text-gray-700">Você confirmou sua participação no evento:</p>
+            <p class="text-purple-600 font-semibold mt-2">${eventName}</p>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-lg mb-6">
+            <p class="text-sm text-gray-700">
+              📧 Você receberá mais informações sobre o evento em breve. 
+              Fique atento ao seu email!
+            </p>
+          </div>
+          <button id="close-confirmation" class="btn-primary text-white px-8 py-3 rounded-full font-semibold w-full">Entendi</button>
+        </div>
+      `;
+      
+      document.body.appendChild(overlay);
+      
+      document.getElementById('close-confirmation').addEventListener('click', () => {
+        overlay.remove();
+      });
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.remove();
+        }
+      });
+    }
+
+    async function deleteEvent(eventId) {
+      const event = allData.find(item => item.__backendId === eventId);
+      if (!event) return;
+
+      const confirmed = await showConfirmDialog('Tem certeza que deseja excluir este evento?');
+      if (!confirmed) return;
+
+      const result = await window.dataSdk.delete(event);
+      if (result.isOk) {
+        showMessage('Evento excluído com sucesso!');
+      } else {
+        showMessage('Erro ao excluir evento', 'error');
+      }
+    }
+
+    function showConfirmDialog(message) {
+      return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+        overlay.style.padding = '20px';
+        overlay.innerHTML = `
+          <div class="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold mb-4">Confirmação</h3>
+            <p class="text-gray-700 mb-6">${message}</p>
+            <div class="flex gap-4">
+              <button id="confirm-yes" class="btn-primary text-white px-6 py-3 rounded-full font-semibold flex-1">Sim</button>
+              <button id="confirm-no" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-full font-semibold flex-1">Cancelar</button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(overlay);
+        
+        document.getElementById('confirm-yes').addEventListener('click', () => {
+          overlay.remove();
+          resolve(true);
+        });
+        
+        document.getElementById('confirm-no').addEventListener('click', () => {
+          overlay.remove();
+          resolve(false);
+        });
+      });
+    }
+
+    function navigateToSection(sectionId) {
+      document.querySelectorAll('section').forEach(section => {
+        if (section.id !== 'forgot-password-modal') {
+          section.classList.add('hidden-section');
+        }
+      });
+      
+      document.getElementById('inicio').classList.remove('hidden-section');
+      document.getElementById('sobre').classList.remove('hidden-section');
+      
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection && targetSection.id !== 'forgot-password-modal') {
+        targetSection.classList.remove('hidden-section');
+        setTimeout(() => {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      }
+    }
+
+    function showMessage(message, type = 'success') {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `fixed top-20 right-6 px-6 py-4 rounded-lg shadow-lg z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white font-semibold`;
+      messageDiv.textContent = message;
+      document.body.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => messageDiv.remove(), 300);
+      }, 3000);
+    }
+
+    function loadTestQuestions() {
+      const container = document.getElementById('test-questions');
+      
+      container.innerHTML = testQuestions.map((q, index) => `
+        <div class="p-6 rounded-2xl shadow-lg">
+          <h3 class="text-xl font-semibold mb-4">${index + 1}. ${q.question}</h3>
+          <div class="space-y-3">
+            ${q.options.map((option, optIndex) => `
+              <label class="flex items-center space-x-3 cursor-pointer">
+                <input type="radio" name="q${q.id}" value="${optIndex}" class="w-5 h-5 text-purple-600">
+                <span>${option}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('') + `
+        <div class="text-center">
+          <button id="submit-test-btn" class="btn-primary text-white px-12 py-4 rounded-full font-semibold text-lg">Ver Resultado</button>
+        </div>
+      `;
+
+      document.getElementById('submit-test-btn').addEventListener('click', () => {
+        let totalScore = 0;
+        let answered = 0;
+        
+        testQuestions.forEach(q => {
+          const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+          if (selected) {
+            answered++;
+            totalScore += parseInt(selected.value);
+          }
+        });
+
+        if (answered < testQuestions.length) {
+          showMessage('Por favor, responda todas as perguntas', 'error');
+          return;
+        }
+
+        const maxScore = testQuestions.length * 4;
+        
+        let level, description, recommendation, color;
+        
+        if (totalScore >= 0 && totalScore <= 5) {
+          level = '✅ Uso Saudável da Internet';
+          description = `Sua pontuação foi ${totalScore} de ${maxScore} pontos. Parabéns! Você mantém um relacionamento equilibrado e saudável com a tecnologia. Você demonstra controle sobre seu tempo online e não apresenta sinais preocupantes de dependência.`;
+          recommendation = 'Continue mantendo esse equilíbrio! Dica: Reserve momentos específicos para atividades offline como exercícios, leitura e convívio social.';
+          color = '#10b981';
+        } else if (totalScore >= 6 && totalScore <= 10) {
+          level = '⚠️ Uso Moderado - Requer Atenção';
+          description = `Sua pontuação foi ${totalScore} de ${maxScore} pontos. Você apresenta alguns sinais de uso excessivo da internet. Embora não seja preocupante ainda, é importante começar a estabelecer limites mais claros.`;
+          recommendation = 'Recomendações: Estabeleça horários sem tela, especialmente antes de dormir. Configure limites de tempo nos aplicativos mais usados. Pratique atividades offline pelo menos 2 horas por dia.';
+          color = '#f59e0b';
+        } else if (totalScore >= 11 && totalScore <= 15) {
+          level = '🚨 Alerta - Sinais de Dependência';
+          description = `Sua pontuação foi ${totalScore} de ${maxScore} pontos. Seu uso da internet está afetando negativamente sua qualidade de vida. Você apresenta vários sinais comportamentais de dependência digital.`;
+          recommendation = 'Ação necessária: Procure reduzir gradualmente o tempo online. Considere conversar com um psicólogo. Participe de nossos eventos e grupos de apoio. Estabeleça metas realistas de redução.';
+          color = '#ef4444';
+        } else {
+          level = '🆘 Dependência Severa';
+          description = `Sua pontuação foi ${totalScore} de ${maxScore} pontos. Você apresenta sinais graves de dependência digital. Sua saúde mental, relacionamentos e/ou produtividade estão sendo seriamente comprometidos pelo uso excessivo da internet.`;
+          recommendation = 'Urgente: Recomendamos fortemente buscar apoio profissional especializado em dependência digital. Entre em contato conosco para indicação de profissionais. Participe dos nossos grupos de apoio. Você não está sozinho!';
+          color = '#dc2626';
+        }
+
+        const resultSection = document.getElementById('test-result');
+        resultSection.style.borderLeft = `6px solid ${color}`;
+        document.getElementById('result-title').textContent = level;
+        document.getElementById('result-title').style.color = color;
+        document.getElementById('result-description').innerHTML = `
+          <p class="mb-4">${description}</p>
+          <div class="bg-gray-50 p-4 rounded-lg text-left">
+            <p class="font-semibold mb-2">📋 Recomendações:</p>
+            <p>${recommendation}</p>
+          </div>
+          <div class="mt-6 text-left">
+            <p class="font-semibold mb-2">🔗 Próximos passos:</p>
+            <ul class="space-y-2 text-sm">
+              <li>• Participe dos nossos eventos sobre uso consciente da tecnologia</li>
+              <li>• Junte-se à comunidade para compartilhar experiências</li>
+              <li>• Consulte nossos artigos sobre saúde digital</li>
+              <li>• Se necessário, busque orientação profissional</li>
+            </ul>
+          </div>
+        `;
+        document.getElementById('test-questions').style.display = 'none';
+        resultSection.classList.remove('hidden-section');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.dataSdk) {
+        const initResult = await window.dataSdk.init(dataHandler);
+        if (!initResult.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+
+      if (window.elementSdk) {
+        await window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  window.elementSdk.config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                }
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (value) => {
+                  window.elementSdk.config.surface_color = value;
+                  window.elementSdk.setConfig({ surface_color: value });
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  window.elementSdk.config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                }
+              },
+              {
+                get: () => config.primary_action_color || defaultConfig.primary_action_color,
+                set: (value) => {
+                  window.elementSdk.config.primary_action_color = value;
+                  window.elementSdk.setConfig({ primary_action_color: value });
+                }
+              },
+              {
+                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+                set: (value) => {
+                  window.elementSdk.config.secondary_action_color = value;
+                  window.elementSdk.setConfig({ secondary_action_color: value });
+                }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => window.elementSdk.config.font_family || defaultConfig.font_family,
+              set: (value) => {
+                window.elementSdk.config.font_family = value;
+                window.elementSdk.setConfig({ font_family: value });
+              }
+            },
+            fontSizeable: {
+              get: () => window.elementSdk.config.font_size || defaultConfig.font_size,
+              set: (value) => {
+                window.elementSdk.config.font_size = value;
+                window.elementSdk.setConfig({ font_size: value });
+              }
+            }
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["hero_title", config.hero_title || defaultConfig.hero_title],
+            ["hero_subtitle", config.hero_subtitle || defaultConfig.hero_subtitle],
+            ["about_title", config.about_title || defaultConfig.about_title],
+            ["cta_button_text", config.cta_button_text || defaultConfig.cta_button_text]
+          ])
+        });
+
+        await onConfigChange(window.elementSdk.config);
+      }
+
+      renderArticles();
+
+      document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.toggle('active');
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = anchor.getAttribute('href').substring(1);
+          navigateToSection(targetId);
+          document.getElementById('mobile-menu').classList.remove('active');
+        });
+      });
+
+      document.getElementById('explore-events-btn').addEventListener('click', () => {
+        navigateToSection('eventos');
+      });
+
+      document.getElementById('take-test-btn').addEventListener('click', () => {
+        navigateToSection('teste');
+        loadTestQuestions();
+      });
+
+      document.getElementById('footer-test-link').addEventListener('click', () => {
+        navigateToSection('teste');
+        loadTestQuestions();
+      });
+
+      document.getElementById('back-to-articles-btn').addEventListener('click', () => {
+        navigateToSection('artigos');
+      });
+
+      document.getElementById('institution-access-btn').addEventListener('click', () => {
+        navigateToSection('institution-access');
+      });
+
+      document.getElementById('institution-access-btn-mobile').addEventListener('click', () => {
+        navigateToSection('institution-access');
+        document.getElementById('mobile-menu').classList.remove('active');
+      });
+
+      document.getElementById('back-to-home-btn').addEventListener('click', () => {
+        navigateToSection('inicio');
+      });
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        loggedInstitution = null;
+        showMessage('Você saiu da conta institucional');
+        navigateToSection('eventos');
+      });
+
+      document.getElementById('new-topic-btn').addEventListener('click', () => {
+        navigateToSection('forum-form');
+      });
+
+      document.getElementById('forgot-password-btn').addEventListener('click', () => {
+        document.getElementById('forgot-password-modal').style.display = 'flex';
+      });
+
+      document.getElementById('close-forgot-password').addEventListener('click', () => {
+        document.getElementById('forgot-password-modal').style.display = 'none';
+      });
+
+      document.getElementById('forgot-password-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('recovery-email').value;
+        const institution = allData.find(item => 
+          item.type === 'institution' && 
+          item.email === email
+        );
+        
+        if (institution) {
+          showMessage(`Instruções de recuperação enviadas para ${email}! (Simulação)`);
+          document.getElementById('forgot-password-modal').style.display = 'none';
+          e.target.reset();
+        } else {
+          showMessage('Email não encontrado no sistema', 'error');
+        }
+      });
+
+      document.getElementById('cancel-event-btn').addEventListener('click', () => {
+        navigateToSection('eventos');
+      });
+
+      document.getElementById('cancel-forum-btn').addEventListener('click', () => {
+        navigateToSection('comunidade');
+      });
+
+      if (document.getElementById('filter-category')) {
+        document.getElementById('filter-category').addEventListener('change', () => {
+          renderEvents(allData);
+        });
+      }
+
+      if (document.getElementById('filter-location')) {
+        document.getElementById('filter-location').addEventListener('change', () => {
+          renderEvents(allData);
+        });
+      }
+
+      document.getElementById('retake-test-btn').addEventListener('click', () => {
+        document.getElementById('test-result').classList.add('hidden-section');
+        document.getElementById('test-questions').style.display = 'block';
+        loadTestQuestions();
+      });
+
+      document.getElementById('institution-login-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        const institution = allData.find(item => 
+          item.type === 'institution' && 
+          item.email === email && 
+          item.password === password
+        );
+        
+        if (institution) {
+          loggedInstitution = institution;
+          showMessage(`Bem-vindo, ${institution.institution_name}!`);
+          e.target.reset();
+          navigateToSection('event-form');
+        } else {
+          showMessage('Email ou senha incorretos', 'error');
+        }
+      });
+
+      document.getElementById('quick-institution-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (currentRecordCount >= 999) {
+          showMessage('Limite de 999 registros atingido. Exclua alguns registros primeiro.', 'error');
+          return;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Criando conta...';
+
+        const formData = {
+          id: Date.now().toString(),
+          type: 'institution',
+          institution_name: document.getElementById('quick-inst-name').value,
+          email: document.getElementById('quick-inst-email').value,
+          phone: document.getElementById('quick-inst-phone').value,
+          password: document.getElementById('quick-inst-password').value,
+          created_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.create(formData);
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Criar Conta';
+
+        if (result.isOk) {
+          setTimeout(() => {
+            const institution = allData.find(item => 
+              item.type === 'institution' && 
+              item.email === formData.email
+            );
+            
+            if (institution) {
+              loggedInstitution = institution;
+              showMessage('Conta criada com sucesso! Agora você pode cadastrar eventos.');
+              e.target.reset();
+              navigateToSection('event-form');
+            }
+          }, 500);
+        } else {
+          showMessage('Erro ao criar conta', 'error');
+        }
+      });
+
+      document.getElementById('event-registration-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!loggedInstitution) {
+          showMessage('Você precisa fazer login como instituição primeiro', 'error');
+          navigateToSection('institution-access');
+          return;
+        }
+        
+        if (currentRecordCount >= 999) {
+          showMessage('Limite de 999 registros atingido. Exclua alguns registros primeiro.', 'error');
+          return;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Cadastrando...';
+
+        const formData = {
+          id: Date.now().toString(),
+          type: 'event',
+          event_name: document.getElementById('event-name').value,
+          event_category: document.getElementById('event-category').value,
+          event_date: document.getElementById('event-date').value,
+          event_location: document.getElementById('event-location').value,
+          event_description: document.getElementById('event-description').value,
+          event_vacancies: parseInt(document.getElementById('event-vacancies').value),
+          event_link: document.getElementById('event-link').value,
+          institution_id: loggedInstitution.__backendId,
+          institution_name: loggedInstitution.institution_name,
+          created_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.create(formData);
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Cadastrar Evento';
+
+        if (result.isOk) {
+          showMessage('Evento cadastrado com sucesso!');
+          e.target.reset();
+          navigateToSection('eventos');
+        } else {
+          showMessage('Erro ao cadastrar evento', 'error');
+        }
+      });
+
+      document.getElementById('forum-topic-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (currentRecordCount >= 999) {
+          showMessage('Limite de 999 registros atingido. Exclua alguns registros primeiro.', 'error');
+          return;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Publicando...';
+
+        const formData = {
+          id: Date.now().toString(),
+          type: 'forum',
+          forum_title: document.getElementById('topic-title').value,
+          forum_content: document.getElementById('topic-content').value,
+          user_name: document.getElementById('topic-author').value,
+          forum_likes: 0,
+          created_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.create(formData);
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publicar';
+
+        if (result.isOk) {
+          showMessage('Tópico publicado com sucesso!');
+          e.target.reset();
+          navigateToSection('comunidade');
+        } else {
+          showMessage('Erro ao publicar tópico', 'error');
+        }
+      });
+
+      document.getElementById('contact-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (currentRecordCount >= 999) {
+          showMessage('Limite de 999 registros atingido. Exclua alguns registros primeiro.', 'error');
+          return;
+        }
+
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+
+        const formData = {
+          id: Date.now().toString(),
+          type: 'contact',
+          user_name: document.getElementById('contact-name').value,
+          email: document.getElementById('contact-email').value,
+          contact_message: document.getElementById('contact-message').value,
+          created_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.create(formData);
+        
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar Mensagem';
+
+        if (result.isOk) {
+          showMessage('Mensagem enviada com sucesso!');
+          e.target.reset();
+        } else {
+          showMessage('Erro ao enviar mensagem', 'error');
+        }
+      });
+    });
+
+// Exemplo de configuração (Axios):
+const API_BASE_URL = "https://equil-brio-digital.onrender.com";
+axios.defaults.baseURL = API_BASE_URL;
+
+    
+    window.showArticleDetail = showArticleDetail;
+    window.navigateToSection = navigateToSection;
+    window.likeTopic = likeTopic;
+    window.deleteEvent = deleteEvent;
+    window.confirmParticipation = confirmParticipation;
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a543828e1d67e0d',t:'MTc2NDI3MzcwNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
